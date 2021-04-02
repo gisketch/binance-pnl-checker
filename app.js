@@ -5,9 +5,9 @@
 class Coin {
   constructor(symbol, orderPrice, prevDay, price) {
     this.symbol = symbol;
-    this.orderPrice = orderPrice;
-    this.prevDay = prevDay;
-    this.price = price;
+    this.orderPrice = orderPrice; //price when bought
+    this.prevDay = prevDay; //price last day
+    this.price = price; //current price (should update every second thru API)
 
     this._setPnl();
   }
@@ -41,7 +41,7 @@ class App {
     const coinSymbol = inputSymbol.value;
     const coinOrder = +inputOrder.value;
 
-    coin = new Coin(coinSymbol, coinOrder, 2.456, 3.569);
+    coin = new Coin(coinSymbol, coinOrder, 2.456, 3.569); //PLACEHOLDER prevday and price
 
     this.#coins.push(coin);
     this._renderCoin(coin);
