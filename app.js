@@ -30,6 +30,7 @@ const inputOrderCurrency = document.querySelector(".input-order-currency");
 let coin;
 
 class App {
+  //TODO: find a way to save pushed coins to this array to load on startup
   #coins = [];
 
   constructor() {
@@ -48,7 +49,7 @@ class App {
     const coinOrderCurrency = +inputOrderCurrency.value;
 
     coin = new Coin(coinSymbol, coinOrder, coinOrderCurrency); //PLACEHOLDER prevday and price
-    this.#coins.push(coin);
+    this.#coins.push(coin); //push to coins array
     this._renderCoin(coin);
   }
 
@@ -109,6 +110,7 @@ class App {
     }, 500);
   }
 
+  //on startup, load all coins in the coins array.
   _loadAllCoins(coinsArr) {
     coinsArr.forEach((coin) => {
       this._renderCoin(coin);
