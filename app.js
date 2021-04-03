@@ -1,20 +1,34 @@
 "use strict";
 
-/// ------- UNIQUE ID ----------///
+/// ------- Functions----------///
 
-function uuidv4() {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-    var r = (Math.random() * 16) | 0,
-      v = c == "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
+// function uuidv4() {
+//   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+//     var r = (Math.random() * 16) | 0,
+//       v = c == "x" ? r : (r & 0x3) | 0x8;
+//     return v.toString(16);
+//   });
+// }
+
+function calculatePnl(price, orderPrice) {
+  return ((price - orderPrice) / orderPrice) * 100;
+}
+
+function calculatePnlString(price, orderPrice) {
+  const pnlRaw = ((price - orderPrice) / orderPrice) * 100;
+  return `${pnlRaw >= 0 ? "+" : ""}${pnlRaw.toFixed(2)}%`;
+}
+
+function calculatePnlCurrency(pnl) {
+  return `${(coin.orderCurrency * (1 + pnl / 100)).toFixed(2)}`;
 }
 
 ///------- COINS CLASSES --------///
 
 class Coin {
-  constructor(symbol, orderPrice, orderCurrency) {
+  constructor(symbol, coinPair, orderPrice, orderCurrency) {
     this.symbol = symbol.toUpperCase();
+    this.coinPair = coinPair;
     this.orderPrice = orderPrice; //price when bought
     this.orderCurrency = orderCurrency.toFixed(2); //price when bought
     this.coinId = "a";
@@ -48,7 +62,7 @@ class App {
     const coinOrder = +inputOrder.value;
     const coinOrderCurrency = +inputOrderCurrency.value;
 
-    coin = new Coin(coinSymbol, coinOrder, coinOrderCurrency); //PLACEHOLDER prevday and price
+    coin = new Coin(coinSymbol, "USDT", coinOrder, coinOrderCurrency); //PLACEHOLDER prevday and price
     this.#coins.push(coin); //push to coins array
     this._renderCoin(coin);
   }
@@ -59,9 +73,17 @@ class App {
           <div class="icon">+</div>
           <div class="coin-details">
             <div class="coin-detail-1">
-              <span class="coin-name">${coin.symbol.toUpperCase()}</span>
+              <span class="coin-name">
+                ${coin.symbol.toUpperCase()}
+                  <span>
+                      <object
+                        data="img/refresh-button.svg"
+                        class="refresh"
+                      ></object>
+                  </span>
+                ${coin.coinPair.toUpperCase()}
+              </span>
               <span class="order-price">${coin.orderPrice}</span>
-              <span class="order-currency">${coin.orderCurrency}</span>
             </div>
 
             <div class="coin-detail-2">
@@ -69,26 +91,26 @@ class App {
               <span id="coin-pnl" class="${
                 coin.pnl > 0 ? "gain" : "loss"
               }">Loading...</span>
-              <span id="currency-pnl">Loading...</span>
             </div>
           </div>
         </div>`;
 
+    //Instantiate coin html object in pnlContainer
     pnlContainer.insertAdjacentHTML("afterbegin", html);
 
+    // ------- DATA REFRESH ---------//
     let coinPrice = document.querySelector(`#${coin.coinId}`);
     let pnlText = document.querySelector(`#coin-pnl`);
-    let curCurrency = document.querySelector(`#currency-pnl`);
+    // let curCurrency = document.querySelector(`#currency-pnl`);
     let coinImage = document.querySelector(`.icon`);
     let curPrice;
-    let newPnl;
 
-    fetch("https://cryptoicons.org/api/icon/eth/200"); //get crypto icon
+    // fetch("https://cryptoicons.org/api/icon/eth/200"); //get crypto icon
 
     ///--- following function will update every 500ms ---///
     setInterval(function () {
       fetch(
-        `https://api.binance.com/api/v3/ticker/price?symbol=${coin.symbol.toUpperCase()}`
+        `https://api.binance.com/api/v3/ticker/price?symbol=${coin.symbol.toUpperCase()}${coin.coinPair.toUpperCase()}`
       )
         .then((res) => res.json())
         .then(function (data) {
@@ -99,14 +121,11 @@ class App {
         .catch((err) => console.log(err));
 
       ///---- set PnL percentage -----///
-      newPnl = ((curPrice - coin.orderPrice) / coin.orderPrice) * 100;
-      pnlText.textContent = `${newPnl >= 0 ? "+" : ""}${newPnl.toFixed(2)}%`;
-
+      pnlText.textContent = calculatePnlString(curPrice, coin.orderPrice);
       ///----- set new Currency ---- ///
-      curCurrency.textContent = `${(
-        coin.orderCurrency *
-        (1 + newPnl / 100)
-      ).toFixed(2)}`;
+      // curCurrency.textContent = calculatePnlCurrency(
+      //   calculatePnl(curPrice, coin.orderPrice)
+      // );
     }, 500);
   }
 

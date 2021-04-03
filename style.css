@@ -1,7 +1,7 @@
 * {
   margin: 0;
   padding: 0;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Varela Round", sans-serif;
 }
 
 body {
@@ -16,27 +16,22 @@ body {
 }
 
 .port {
-  background-color: #374673;
+  background-color: #212244;
 }
 
 .pnl-container {
-  background-image: linear-gradient(#283456, #1f2841);
+  background-color: #161730;
 }
 
 .coin {
-  background-image: linear-gradient(#354170, #2a3458);
-  margin: 1rem;
+  background-color: #212244;
+  margin-inline: 1.6125rem;
+  margin-block: 1rem;
   height: 10vh;
   border-radius: 25px;
   display: grid;
   grid-template-columns: 1fr 4fr;
   box-shadow: 0px 10px 5px 5px rgba(0, 0, 0, 0.05);
-}
-
-.icon {
-  background-image: linear-gradient(#303a67, #283055);
-  border-top-left-radius: 25px;
-  border-bottom-left-radius: 25px;
 }
 
 .coin-details {
@@ -46,13 +41,54 @@ body {
 
 .coin-detail-1 {
   display: grid;
+  grid-template-rows: 3fr 1fr 1fr;
+}
+
+.coin-name {
+  text-align: left;
+  font-weight: 500;
+  font-size: 1.5rem;
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.refresh {
+  filter: invert(100%);
+  opacity: 80%;
+  height: 0.8rem;
+}
+
+.order-price {
+  text-align: left;
+  color: #5a5b91;
+  font-weight: 600;
 }
 
 .coin-detail-2 {
   display: grid;
 }
 
-.coin-name {
-  font-weight: 600;
-  font-size: 1.5rem;
+#coin-price {
+  text-align: right;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+#coin-pnl {
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: right;
+  border-radius: 10px;
+  position: relative;
+  height: fit-content;
+  width: fit-content;
+  padding: 0.25rem;
+}
+
+.gain {
+  background-color: #22e02d;
+}
+
+.loss {
+  background-color: #ff3180;
 }
