@@ -41,6 +41,10 @@ const addCoin = document.querySelector(".btn");
 const inputSymbol = document.querySelector(".input-symbol");
 const inputOrder = document.querySelector(".input-order-price");
 const inputOrderCurrency = document.querySelector(".input-order-currency");
+const overlay = document.querySelector(".overlay");
+const addCoinModal = document.querySelector(".add-coin-container");
+const addCoinBtn = document.querySelector(".add-coin-btn");
+
 let coin;
 
 class App {
@@ -51,8 +55,23 @@ class App {
     this._renderCoin;
 
     addCoin.addEventListener("click", this._newCoin.bind(this));
+    addCoin.addEventListener("click", this._hideCoinModal.bind(this));
+    addCoinBtn.addEventListener("click", this._showCoinModal.bind(this));
+    overlay.addEventListener("click", this._hideCoinModal.bind(this));
 
     this._loadAllCoins(this.#coins);
+  }
+
+  _showCoinModal(e) {
+    e.preventDefault();
+    overlay.style.display = "block";
+    addCoinModal.classList.add("show-modal");
+  }
+
+  _hideCoinModal(e) {
+    e.preventDefault();
+    overlay.style.display = "none";
+    addCoinModal.classList.remove("show-modal");
   }
 
   _newCoin(e) {
@@ -70,7 +89,14 @@ class App {
   _renderCoin(coin) {
     let html = `
         <div class="coin">
-          <div class="icon">+</div>
+          <div class="icons">
+            <div class="icon-item">
+              <img class="icon">
+            </div>
+            <div class="icon-item">
+              <img class="icon-pair">
+            </div>
+          </div>
           <div class="coin-details">
             <div class="coin-detail-1">
               <span class="coin-name">
@@ -83,14 +109,14 @@ class App {
                   </span>
                 ${coin.coinPair.toUpperCase()}
               </span>
-              <span class="order-price">${coin.orderPrice}</span>
+              <span class="order-price">${
+                coin.orderPrice
+              } ${coin.coinPair.toUpperCase()}</span>
             </div>
 
             <div class="coin-detail-2">
-              <span id="${coin.coinId}" class="price">Loading...</span>
-              <span id="coin-pnl" class="${
-                coin.pnl > 0 ? "gain" : "loss"
-              }">Loading...</span>
+              <div id="${coin.coinId}" class="price">Loading...</div>
+              <div id="coin-pnl">Loading...</div>
             </div>
           </div>
         </div>`;
@@ -103,9 +129,27 @@ class App {
     let pnlText = document.querySelector(`#coin-pnl`);
     // let curCurrency = document.querySelector(`#currency-pnl`);
     let coinImage = document.querySelector(`.icon`);
+    let coinPairImage = document.querySelector(`.icon-pair`);
     let curPrice;
+    let fetchImage;
 
-    // fetch("https://cryptoicons.org/api/icon/eth/200"); //get crypto icon
+    fetch(
+      `https://cryptoicon-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`
+    )
+      .then((res) => res.blob())
+      .then((blob) => {
+        fetchImage = URL.createObjectURL(blob);
+        coinImage.src = fetchImage;
+      });
+
+    fetch(
+      `https://cryptoicon-api.vercel.app/api/icon/${coin.coinPair.toLowerCase()}`
+    )
+      .then((res) => res.blob())
+      .then((blob) => {
+        fetchImage = URL.createObjectURL(blob);
+        coinPairImage.src = fetchImage;
+      });
 
     ///--- following function will update every 500ms ---///
     setInterval(function () {
@@ -115,12 +159,14 @@ class App {
         .then((res) => res.json())
         .then(function (data) {
           const newPrice = +data.price;
-          coinPrice.textContent = newPrice.toPrecision(6);
+          coinPrice.textContent = `${newPrice.toPrecision(6)}`;
           curPrice = data.price;
         })
         .catch((err) => console.log(err));
 
       ///---- set PnL percentage -----///
+      pnlText.className =
+        calculatePnl(curPrice, coin.orderPrice) > 0 ? "gain" : "loss";
       pnlText.textContent = calculatePnlString(curPrice, coin.orderPrice);
       ///----- set new Currency ---- ///
       // curCurrency.textContent = calculatePnlCurrency(

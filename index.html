@@ -20,35 +20,35 @@
       <div class="port">Port</div>
       <div class="pnl-container">
         <!-- TEMPLATE FOR COIN -->
-        <div class="coin">
-          <div class="icon"><img src="" /></div>
-          <div class="coin-details">
-            <div class="coin-detail-1">
-              <span class="coin-name">
-                BTC
-                <span>
-                  <object
-                    data="img/refresh-button.svg"
-                    class="refresh"
-                  ></object>
-                </span>
-                USDT
-              </span>
-              <span class="order-price">2.5000</span>
+        <!-- END TEMPLATE FOR COIN -->
+
+        <!-- CONTAINER MODAL -->
+        <div class="add-coin-container">
+          <div class="add-coin">
+            <div class="add-coin-label">Add Coin</div>
+            <div class="symbol-pair">
+              <input class="input-symbol" type="text" placeholder="ETH" />
+              <button class="input-pair">USDT</button>
             </div>
-            <div class="coin-detail-2">
-              <span id="coin-price" class="price">7.65532</span>
-              <span id="coin-pnl" class="gain">+50.69%</span>
-            </div>
+            <input
+              class="input-order-price"
+              type="number"
+              placeholder="Order Price"
+            />
+            <input
+              class="input-order-currency"
+              type="number"
+              placeholder="Money Placed"
+            />
+            <button class="btn">ADD</button>
           </div>
         </div>
-        <!-- END TEMPLATE FOR COIN -->
-        <div class="add-coin">
-          <button class="btn">ADD</button>
-          <input class="input-symbol" type="text" />
-          <input class="input-order-price" type="number" />
-          <input class="input-order-currency" type="number" />
-        </div>
+
+        <!-- Add coin sticky -->
+        <div class="add-coin-btn">+</div>
+
+        <!-- BG OVERLAY FOR MODALS -->
+        <div class="overlay"></div>
       </div>
     </div>
   </body>

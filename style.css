@@ -2,6 +2,11 @@
   margin: 0;
   padding: 0;
   font-family: "Varela Round", sans-serif;
+  user-select: none; /* supported by Chrome and Opera */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
 }
 
 body {
@@ -34,6 +39,25 @@ body {
   box-shadow: 0px 10px 5px 5px rgba(0, 0, 0, 0.05);
 }
 
+.icons {
+  display: grid;
+  margin: auto;
+}
+
+.icon-item > * {
+  height: 2.25rem;
+}
+
+.icon-item:first-of-type {
+  grid-column: 1 / span 2;
+  grid-row: 1 / span 2;
+}
+
+.icon-item:last-of-type {
+  grid-column: 2 / span 2;
+  grid-row: 2 / span 2;
+}
+
 .coin-details {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -41,20 +65,19 @@ body {
 
 .coin-detail-1 {
   display: grid;
-  grid-template-rows: 3fr 1fr 1fr;
 }
 
 .coin-name {
   text-align: left;
   font-weight: 500;
-  font-size: 1.5rem;
-  grid-column-start: 1;
-  grid-column-end: 3;
+  font-size: 1.3rem;
+  margin-top: 1.3rem;
+  padding-inline: 0.5rem;
 }
 
 .refresh {
   filter: invert(100%);
-  opacity: 80%;
+  opacity: 90%;
   height: 0.8rem;
 }
 
@@ -62,33 +85,171 @@ body {
   text-align: left;
   color: #5a5b91;
   font-weight: 600;
+  padding-inline: 0.5rem;
+  padding-block: 0.25rem;
+  margin-bottom: 1.3rem;
 }
 
 .coin-detail-2 {
   display: grid;
 }
 
-#coin-price {
+.price {
   text-align: right;
   font-size: 1.25rem;
   font-weight: 500;
+  margin-right: 1.2rem;
+  margin-top: 1.3rem;
 }
 
 #coin-pnl {
-  font-size: 0.8rem;
-  font-weight: 500;
-  text-align: right;
-  border-radius: 10px;
-  position: relative;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 1rem;
+  padding-inline: 0.5rem;
+  padding-block: 0.25rem;
+  margin-right: 1.2rem;
+  margin-left: auto;
+  margin-bottom: 1.3rem;
   height: fit-content;
   width: fit-content;
-  padding: 0.25rem;
 }
 
 .gain {
   background-color: #22e02d;
+  box-shadow: 0px 0px 5px 5px #22e02d33;
 }
 
 .loss {
   background-color: #ff3180;
+  box-shadow: 0px 0px 5px 5px #ff318033;
+}
+
+/* OVERLAY */
+
+.overlay {
+  position: fixed; /* Sit on top of the page content */
+  display: none; /* Hidden by default */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer; /* Add a pointer on hover */
+}
+/* ADD COINTAINER */
+
+.add-coin-container {
+  background-color: #4d4e7e44;
+  border-radius: 30px;
+  height: 60vh;
+  width: 80vw;
+  top: 0;
+  position: fixed;
+  z-index: 5;
+  overflow: auto;
+  opacity: 0;
+  visibility: hidden;
+  margin-inline: 10vw;
+  margin-block: 20vh;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transform: scale(1.1);
+  transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+}
+
+.show-modal {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+}
+
+/* ADD COIN */
+
+.add-coin-btn {
+  border-radius: 50%;
+
+  /* CENTER + */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* disable selection */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  outline: 0;
+
+  height: 7.5rem;
+  width: 7.5rem;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 5rem;
+  color: #5a5b91;
+  background: #212244;
+
+  transition: all 0.2s ease-in-out;
+}
+
+.add-coin-btn:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  color: white;
+}
+
+/* INPUT */
+
+.add-coin {
+  display: grid;
+  grid-gap: 2rem;
+  padding: 2rem;
+}
+
+.add-coin-label {
+  color: #9091cf;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.symbol-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+input {
+  background: #161730aa;
+  color: #5a5b91;
+  font-size: 1.5rem;
+  padding: 0.7rem;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 2rem;
+  width: auto;
+  -moz-appearance: textfield;
+  transition: background 0.4s ease-in-out;
+}
+
+input::placeholder {
+  color: #5a5b9177;
+}
+
+/* remove arrow buttons */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+input:focus {
+  background: #191b33;
+  outline: none;
 }
